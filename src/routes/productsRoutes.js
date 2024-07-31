@@ -9,14 +9,6 @@ router.post("/products", async (req, res) => {
     if (!productId || !name || !price || !availableQuantity) {
       return res.status(400).json({ message: "Please fill in all fields" });
     }
-    const product = new Product({
-      productId,
-      name,
-      price,
-      description,
-      availableQuantity,
-    });
-    await product.save();
 
     const isProduct = await Product.findOne({ productId });
 
@@ -25,6 +17,15 @@ router.post("/products", async (req, res) => {
         message: "Product already exists",
       });
     }
+
+    const product = new Product({
+      productId,
+      name,
+      price,
+      description,
+      availableQuantity,
+    });
+    await product.save();
 
     res.status(201).json({
       message: "the product created successFully",
