@@ -7,7 +7,10 @@ router.post("/orders", async (req, res) => {
   try {
     const { orderId, productId, quantity } = req.body;
 
-    const product = await Product.findOne({ productId });
+    if (!orderId || !productId || !quantity) {
+      return res.status(400).json({ message: "Please fill in all fields" });
+    }
+
     const isOrder = await Order.findOne({ orderId });
 
     if (isOrder) {
@@ -15,6 +18,8 @@ router.post("/orders", async (req, res) => {
         message: "Order already exists",
       });
     }
+
+    const product = await Product.findOne({ productId });
 
     if (!product)
       return res.status(404).json({
